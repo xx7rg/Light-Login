@@ -45,6 +45,11 @@ input {
   background: #050607;
 }
 
+.scene-stage {
+  position: absolute;
+  inset: 0;
+}
+
 .scene-art {
   position: absolute;
   inset: 0;
@@ -110,7 +115,8 @@ input {
   left: 50%;
   width: 100%;
   height: var(--chain-length, 68%);
-  transform: translateX(-50%) rotate(var(--chain-angle, 0deg));
+  /* --chain-angle é o ângulo geométrico (positivo = ponta para a direita). rotate() positivo é horário e levaria a ponta para a esquerda: por isso o sinal invertido. */
+  transform: translateX(-50%) rotate(calc(var(--chain-angle, 0deg) * -1));
   transform-origin: 50% 0;
   transition:
     transform 720ms cubic-bezier(0.22, 1.45, 0.38, 1),
@@ -479,48 +485,85 @@ input {
     overflow-y: auto;
   }
 
+  /*
+   * Uma família contínua, não três remendos. Tudo abaixo é função de --d, o quanto a tela passou de 4 / 5
+   * (0 exatamente em 4 / 5, onde cada valor coincide com a composição horizontal: sem salto no limiar).
+   *  - o palco (arte + escurecimento + cordão, a mesma cena 1536 / 909) cresce com --d, sobe de "centralizado" até
+   *    cortar só a sobra escura do topo da arte e se desloca para o abajur ficar no centro da tela; nunca é esticado;
+   *  - o bloco de login sai do lado do abajur e desce para baixo dele (largura, posição, tipografia e espaçamentos
+   *    vão de um valor ao outro) e termina abaixo da borda inferior da arte, então o título nunca cruza a haste
+   *    nem a base;
+   *  - o abajur é o maior que ainda deixa o bloco de login inteiro na tela (--world-w é limitado pela altura),
+   *    o que reduz o vazio inferior em vez de preenchê-lo com algo novo.
+   */
   .scene-canvas {
+    --d: max(0px, calc(80svh - 100vw));
+    --unit: calc(358px + min(55px, max(0px, (100vw - 380px) * 0.25)));
+    --pad-b: 22px;
+    --gap: 12px;
+    --world-w: max(
+      100vw,
+      min(calc(100vw + var(--d) * 3), calc((100svh - var(--unit) - var(--pad-b) - var(--gap)) * 1.903))
+    );
+    --world-h: calc(var(--world-w) * 909 / 1536);
+    --card-y: calc(var(--world-h) * 0.123 + min(var(--world-h) * 0.821 + var(--gap), var(--d) * 6.5));
+    --world-top: max(
+      calc(var(--world-h) * -0.056),
+      min(calc((100svh - var(--world-h)) / 2 - var(--d) * 1.6), calc(100svh - var(--card-y) - var(--unit) - var(--pad-b) - 25px))
+    );
+    --world-left: min(0px, calc(50vw - var(--world-w) * 0.229));
+
     width: 100vw;
     min-height: 100svh;
     aspect-ratio: auto;
   }
 
-  .scene-art {
-    top: 0;
-    width: 175vw;
-    height: auto;
-    object-fit: initial;
-    transform: translateX(-19%);
+  .scene-stage {
+    inset: auto;
+    top: var(--world-top);
+    left: var(--world-left);
+    width: var(--world-w);
+    height: var(--world-h);
   }
 
-  .pull-switch {
-    top: 43.5vw;
-    left: 24.3vw;
-    width: 9vw;
-    height: 22vw;
+  /* O cordão escala com o abajur (mesmas % do palco da versão horizontal); a área de toque nunca é menor que 44 px. */
+  .pull-switch::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: max(100%, 44px);
+    content: "";
+    transform: translateX(-50%);
   }
 
   .login-wrap {
-    top: 52vw;
-    right: 5vw;
-    width: 90vw;
+    position: relative;
+    top: auto;
+    right: auto;
+    width: min(90vw, calc(45.5vw + var(--d) * 2.4));
+    margin: calc(var(--world-top) + var(--card-y))
+      max(5vw, calc(5.9vw - var(--d) * 0.1)) var(--pad-b) auto;
   }
 
   .brand {
-    margin-bottom: 5vw;
+    margin-bottom: calc(3.8% + min(6px, var(--d) * 0.06));
   }
 
   .brand h1 {
-    font-size: 2rem;
+    font-size: calc(clamp(1.5rem, 3.15vw, 3.25rem) + min(0.5rem, var(--d) * 0.05));
   }
 
   .brand-tagline {
-    margin-top: 0.5rem;
-    font-size: 0.62rem;
+    margin-top: calc(1.3% + min(3.5px, var(--d) * 0.02));
+    font-size: calc(clamp(0.55rem, 0.92vw, 0.96rem) + min(1.1px, var(--d) * 0.01));
   }
 
   .login-card {
-    padding: 2rem;
+    padding:
+      max(2rem, calc(12.4% - var(--d) * 0.5))
+      max(2rem, calc(9.8% - var(--d) * 0.5))
+      max(2rem, calc(9.4% - var(--d) * 0.5));
   }
 }
 

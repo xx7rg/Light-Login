@@ -307,6 +307,8 @@ export default function Home() {
   return (
     <main className={`scene${lightOn ? " light-on" : ""}`}>
       <div className="scene-canvas">
+        {/* Arte, escurecimento e cordão compartilham o mesmo palco: o cordão é posicionado em % do palco e, portanto, fica preso ao abajur em qualquer enquadramento. */}
+        <div className="scene-stage">
         <Image
           className="scene-art"
           src={`${basePath}/lamp-scene-v2.png`}
@@ -314,7 +316,7 @@ export default function Home() {
           aria-hidden="true"
           fill
           priority
-          sizes="(max-aspect-ratio: 4/5) 175vw, 100vw"
+          sizes="(max-aspect-ratio: 4/5) 160vw, 100vw"
         />
         <div className="blackout" aria-hidden="true" />
 
@@ -340,6 +342,7 @@ export default function Home() {
             <span className="interactive-handle" />
           </span>
         </button>
+        </div>
 
         <section className="login-wrap" aria-hidden={!lightOn}>
           <header className="brand">
