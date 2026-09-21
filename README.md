@@ -169,10 +169,21 @@ Esta versão valida e simula o envio somente no navegador. Para uso real, ainda
 seria necessário integrar um serviço de autenticação, criar tratamento seguro
 de sessão, definir recuperação de senha e proteger as rotas privadas.
 
-## Autoria
+---
 
-Desenvolvido por **x7rG Enterprise** — [@_7Ragnar](https://www.instagram.com/_7ragnar/) · [LinkedIn](https://www.linkedin.com/in/rgds/)
+<p align="center">
+  <strong>LIGHT — luz, movimento e som aplicados a uma experiência de acesso.</strong><br />
+  Desenvolvido por <strong>x7rG ENTERPRISE™</strong>.
+</p>
 
 ---
 
-<p align="center">LIGHT — luz, movimento e som aplicados a uma experiência de acesso.</p>
+<div align="center">
+
+**© 2026 x7rG ENTERPRISE™** — Todos os direitos reservados.
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/rgds)
+&nbsp;
+[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=flat&logo=instagram&logoColor=white)](https://www.instagram.com/_7ragnar/)
+
+</div>
