@@ -113,9 +113,9 @@ está configurado com `prefers-reduced-motion`.
 ### Instalação
 
 ```bash
-git clone https://github.com/xx7rg/LIGHT-Login-Experience.git
-cd LIGHT-Login-Experience
-npm install
+git clone https://github.com/xx7rg/Light-Login.git
+cd Light-Login
+npm ci
 npm run dev
 ```
 
@@ -128,12 +128,35 @@ Abra [http://localhost:3000](http://localhost:3000) no navegador.
 | `npm run dev` | Inicia o ambiente local de desenvolvimento. |
 | `npm run lint` | Verifica padrões de código, React e acessibilidade. |
 | `npm run build` | Valida TypeScript e gera a versão estática em `out/`. |
-| `npm run start` | Inicia o servidor Next.js quando aplicável. |
+
+### Prévia da versão de produção
+
+Este projeto usa `output: "export"`: o build gera arquivos estáticos em `out/`.
+Para conferir essa versão, execute os comandos abaixo na raiz do projeto.
+A prévia usa **Python 3**, além dos requisitos de desenvolvimento já listados.
+
+```bash
+npm run build
+python -m http.server 3000 --bind 127.0.0.1 --directory out
+```
+
+Abra [http://127.0.0.1:3000](http://127.0.0.1:3000). Encerre o servidor com
+`Ctrl+C`. Se o desenvolvimento estiver usando a porta 3000, encerre-o primeiro
+ou escolha outra porta para a prévia. Em sistemas onde o executável se chama
+`python3`, substitua `python` por `python3`.
+
+Para essa prévia local, deixe `NEXT_PUBLIC_BASE_PATH` sem definição ao gerar o
+build. O caminho-base usado pelo GitHub Pages é configurado separadamente no
+workflow de publicação.
+
+O script legado `npm run start` chama `next start`, que não serve projetos com
+`output: "export"`. Use `npm run dev` durante o desenvolvimento e o servidor
+estático acima para conferir o build de produção.
 
 ## Estrutura do projeto
 
 ```text
-LIGHT-Login-Experience/
+Light-Login/
 ├── .github/workflows/       # Publicação automática no GitHub Pages
 ├── app/
 │   ├── globals.css          # Visual, animações e responsividade
