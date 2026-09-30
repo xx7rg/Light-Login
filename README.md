@@ -15,6 +15,8 @@ passa a controlar a interface.
 
 **[Ver experiência publicada](https://light-login-x7rg.contato-rgsantos.workers.dev)**
 
+[Versão no GitHub Pages](https://xx7rg.github.io/Light-Login/)
+
 </div>
 
 ![Apresentação do LIGHT Login Experience](public/og-v3.png)
@@ -27,8 +29,8 @@ a iluminação da cena responde junto com o formulário, as sombras, os moviment
 e os sons.
 
 O projeto foi criado como uma demonstração de front-end e design de interação.
-Ele não depende de backend para funcionar e pode ser publicado como site
-estático no GitHub Pages.
+Ele não depende de backend para funcionar e é publicado como site estático na
+Cloudflare e no GitHub Pages.
 
 > O formulário é demonstrativo: nenhum e-mail ou senha é enviado ou armazenado.
 
@@ -82,6 +84,7 @@ estático no GitHub Pages.
 | **Web Audio API** | Síntese dos efeitos sonoros diretamente no navegador. |
 | **GitHub Actions** | Build automatizado e entrega do conteúdo estático. |
 | **GitHub Pages** | Hospedagem gratuita da versão de produção. |
+| **Cloudflare Workers** | Hospedagem principal dos arquivos estáticos. |
 
 ## Como a experiência funciona
 
@@ -126,32 +129,32 @@ Abra [http://localhost:3000](http://localhost:3000) no navegador.
 | Comando | Função |
 | --- | --- |
 | `npm run dev` | Inicia o ambiente local de desenvolvimento. |
+| `npm run typecheck` | Gera os tipos das rotas e valida o TypeScript. |
 | `npm run lint` | Verifica padrões de código, React e acessibilidade. |
 | `npm run build` | Valida TypeScript e gera a versão estática em `out/`. |
+| `npm run preview` | Serve a exportação estática em `http://127.0.0.1:3000`. |
+| `npm run check:smoke` | Testa luz, formulário, metadados e layout móvel no navegador. Requer a prévia ativa. |
 
 ### Prévia da versão de produção
 
 Este projeto usa `output: "export"`: o build gera arquivos estáticos em `out/`.
 Para conferir essa versão, execute os comandos abaixo na raiz do projeto.
-A prévia usa **Python 3**, além dos requisitos de desenvolvimento já listados.
 
 ```bash
 npm run build
-python -m http.server 3000 --bind 127.0.0.1 --directory out
+npm run preview
 ```
 
 Abra [http://127.0.0.1:3000](http://127.0.0.1:3000). Encerre o servidor com
-`Ctrl+C`. Se o desenvolvimento estiver usando a porta 3000, encerre-o primeiro
-ou escolha outra porta para a prévia. Em sistemas onde o executável se chama
-`python3`, substitua `python` por `python3`.
+`Ctrl+C`. Se o desenvolvimento estiver usando a porta 3000, encerre-o primeiro.
 
 Para essa prévia local, deixe `NEXT_PUBLIC_BASE_PATH` sem definição ao gerar o
 build. O caminho-base usado pelo GitHub Pages é configurado separadamente no
 workflow de publicação.
 
-O script legado `npm run start` chama `next start`, que não serve projetos com
-`output: "export"`. Use `npm run dev` durante o desenvolvimento e o servidor
-estático acima para conferir o build de produção.
+O comando `next start` não serve projetos com `output: "export"`. Use
+`npm run dev` durante o desenvolvimento e `npm run preview` para conferir o
+build de produção.
 
 ## Estrutura do projeto
 
@@ -164,12 +167,21 @@ Light-Login/
 │   └── page.tsx             # Interface, estados, eventos e áudio
 ├── docs/                    # Documentação técnica e apresentação
 ├── public/                  # Cena, imagens sociais e favicon
+├── scripts/preview.mjs      # Servidor local da exportação estática
 ├── next.config.ts           # Exportação estática e basePath
 ├── package.json             # Dependências e comandos
 └── tsconfig.json            # Configuração TypeScript
 ```
 
 ## Publicação
+
+A versão principal é publicada automaticamente na Cloudflare:
+
+- [light-login-x7rg.contato-rgsantos.workers.dev](https://light-login-x7rg.contato-rgsantos.workers.dev)
+
+O GitHub Actions mantém uma segunda versão no GitHub Pages:
+
+- [xx7rg.github.io/Light-Login](https://xx7rg.github.io/Light-Login/)
 
 O workflow em `.github/workflows/deploy-pages.yml` executa automaticamente:
 

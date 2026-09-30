@@ -4,7 +4,9 @@ import "./globals.css";
 const title = "Light — Login Experience";
 const description =
   "Uma experiência de login interativa controlada pela luz de um abajur.";
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  "https://light-login-x7rg.contato-rgsantos.workers.dev";
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const socialImageUrl = new URL(`${basePath}/og-v3.png`, siteUrl).toString();
 
