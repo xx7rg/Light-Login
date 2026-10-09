@@ -21,7 +21,7 @@ const port = 9800 + Math.floor(Math.random() * 100);
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), "light-login-smoke-"));
 const child = spawn(
   browser,
-  ["--headless=new", `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`, "--no-first-run", "--disable-gpu", "--hide-scrollbars", "about:blank"],
+  ["--headless=new", `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`, "--no-first-run", "--disable-extensions", "--disable-sync", "--disable-gpu", "--hide-scrollbars", "about:blank"],
   { stdio: ["ignore", "ignore", "pipe"] },
 );
 let browserError = "";
@@ -33,6 +33,8 @@ function cleanup() {
   cleaned = true;
   try { child.kill(); } catch {}
   setTimeout(() => {
+    const allowedPrefix = path.join(path.resolve(os.tmpdir()), "light-login-smoke-");
+    if (!path.resolve(profile).startsWith(allowedPrefix)) return;
     try { fs.rmSync(profile, { recursive: true, force: true }); } catch {}
   }, 500);
 }
@@ -41,7 +43,7 @@ process.on("exit", cleanup);
 let ready = false;
 for (let attempt = 0; attempt < 60; attempt += 1) {
   try {
-    const response = await fetch(`http://127.0.0.1:${port}/json/version`);
+    const response = await fetch(`http://127.0.0.1:${port}/json/version`, { signal: AbortSignal.timeout(2000) });
     if (response.ok) { ready = true; break; }
   } catch {}
   if (child.exitCode !== null) break;
@@ -56,7 +58,11 @@ if (!ready) {
 
 const target = await (await fetch(`http://127.0.0.1:${port}/json/new?about:blank`, { method: "PUT" })).json();
 const ws = new WebSocket(target.webSocketDebuggerUrl);
-await new Promise((resolve) => ws.addEventListener("open", resolve, { once: true }));
+await new Promise((resolve, reject) => {
+  const timeout = setTimeout(() => reject(new Error("Conexão de depuração não iniciou em 20 segundos.")), 20000);
+  ws.addEventListener("open", () => { clearTimeout(timeout); resolve(); }, { once: true });
+  ws.addEventListener("error", () => { clearTimeout(timeout); reject(new Error("Falha na conexão de depuração.")); }, { once: true });
+});
 
 let id = 0;
 const pending = new Map();
@@ -161,6 +167,8 @@ try {
   failures += 1;
   console.error("ERRO na verificação:", error.stack || error);
 } finally {
+  try { ws.send(JSON.stringify({ id: ++id, method: "Browser.close" })); } catch {}
+  await sleep(200);
   try { ws.close(); } catch {}
   cleanup();
   process.exitCode = failures ? 1 : 0;

@@ -12,6 +12,7 @@ passa a controlar a interface.
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![CSS](https://img.shields.io/badge/CSS-Responsivo-663399?style=for-the-badge&logo=css&logoColor=white)
 ![Web Audio API](https://img.shields.io/badge/Web_Audio-API-D9485F?style=for-the-badge&logo=webauthn&logoColor=white)
+[![CI](https://github.com/xx7rg/Light-Login/actions/workflows/ci.yml/badge.svg)](https://github.com/xx7rg/Light-Login/actions/workflows/ci.yml)
 
 **[Ver experiência publicada](https://light-login-x7rg.contato-rgsantos.workers.dev)**
 
@@ -20,6 +21,20 @@ passa a controlar a interface.
 </div>
 
 ![Apresentação do LIGHT Login Experience](public/og-v3.png)
+
+## Validação automática
+
+Execute `npm run lint`, `npm run typecheck` e `npm run build` para conferir o
+projeto. Depois do build, `npm run preview` inicia a prévia; em outro terminal,
+`npm run check:smoke` testa cordão, formulário, login simulado e layout móvel.
+
+A CI executa essas verificações em pushes e pull requests. Também consulta
+`npm audit --omit=dev --audit-level high` e `npm run audit:dev`. O último comando
+primeiro executa oito testes de segurança do patch local de `braces`; somente
+o aviso `GHSA-vfj7-8cjw-p6xm`, protegido pelo patch, é reconhecido. Qualquer
+outro aviso reprova a validação. O npm ainda identifica a versão original,
+sem reconhecer a alteração local. `npm install` e `npm ci` aplicam o patch
+automaticamente e falham se ele não puder ser aplicado.
 
 ## Sobre o projeto
 

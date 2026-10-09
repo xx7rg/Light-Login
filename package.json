@@ -11,10 +11,13 @@
     "lint": "eslint . --ignore-pattern out --ignore-pattern .next",
     "preview": "node scripts/preview.mjs",
     "typecheck": "next typegen && tsc --noEmit",
-    "check:smoke": "node scripts/smoke.mjs"
+    "check:smoke": "node scripts/smoke.mjs",
+    "postinstall": "patch-package --error-on-fail",
+    "test:security": "node --test tests/braces-security.test.mjs",
+    "audit:dev": "npm run test:security && node scripts/audit-dev.mjs"
   },
   "dependencies": {
-    "next": "16.3.6",
+    "next": "16.3.8",
     "react": "19.2.6",
     "react-dom": "19.2.6"
   },
@@ -24,9 +27,18 @@
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "eslint": "9.39.4",
-    "eslint-config-next": "16.3.6",
+    "eslint-config-next": "16.3.8",
     "tailwindcss": "4.2.1",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "patch-package": "8.0.1"
   },
-  "type": "module"
+  "type": "module",
+  "overrides": {
+    "sharp": "0.35.5",
+    "source-map-js": "^1.2.2"
+  },
+  "allowScripts": {
+    "sharp@0.35.5": true,
+    "unrs-resolver@1.11.1": true
+  }
 }

@@ -33,6 +33,13 @@ jobs:
       - name: Instalar dependências
         run: npm ci
 
+      - name: Validar código e dependências
+        run: |
+          npm run lint
+          npm run typecheck
+          npm audit --omit=dev --audit-level high
+          npm run audit:dev
+
       - name: Gerar o site
         env:
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
